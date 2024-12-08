@@ -1,0 +1,8 @@
+-c requirements.txt
+pip-tools >= 7.2.0
+pytest
+notebook
+pre-commit
+nb-clean
+pyright
+
