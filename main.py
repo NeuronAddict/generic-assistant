@@ -16,7 +16,7 @@ if __name__ == '__main__':
         with gr.Column():
 
             with gr.Row():
-                model_choose = gr.Dropdown(['mistral-large-latest', 'mistral-small-latest', 'ministral-3b-latest'],
+                model_choose = gr.Dropdown(['mistral-large-latest', 'mistral-small-latest', 'ministral-8b-latest', 'ministral-3b-latest'],
                                        type='value', )
                 temp_slider = gr.Slider(0, 1, value=0.2, label="Temperature",
                                     info="Choose temperature https://docs.mistral.ai/api/#tag/chat/operation/chat_completion_v1_chat_completions_post")
