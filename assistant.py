@@ -50,3 +50,26 @@ class BaseAssistant(Assistant):
             raise Exception(f'Bad chat response {chat_response}')
 
 
+class LogAssistant(Assistant):
+
+    def __init__(self, assistant: Assistant):
+        self.assistant = assistant
+
+    def ask(self, question: str, history: List[str], mistral_model: str, system_prompt: str, temperature: float, prefix: None|str = None) -> str:
+        answer = self.assistant.ask(question, history, mistral_model, system_prompt, temperature, prefix)
+        self.__log(question, history, mistral_model, system_prompt, temperature, prefix, answer)
+        return answer
+
+    def __log(self, question, history, mistral_model, system_prompt, temperature, prefix, answer):
+        print(f"""
+        ####
+        ####
+        Use model {mistral_model} with temperature {temperature} and system prompt :
+        {system_prompt}
+        ###
+        Question: {question}
+        History: {history}
+        Answer: 
+        {prefix} {answer} 
+        ###
+        """)

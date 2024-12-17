@@ -3,10 +3,10 @@ import os
 import gradio as gr
 from mistralai import Mistral
 
-from assistant import Assistant
+from assistant import BaseAssistant, LogAssistant
 
 client = Mistral(api_key=os.environ['MISTRAL_API_KEY'])
-assistant = Assistant(client)
+assistant = LogAssistant(BaseAssistant(client))
 
 
 if __name__ == '__main__':
