@@ -5,7 +5,7 @@ from mistralai import Mistral
 
 class ChatBody:
 
-    def __init__(self, system_prompt: str, question: str, history: List[str], prefix: str):
+    def __init__(self, system_prompt: str, question: str, history: List[str], prefix: str|None):
         self.system_prompt = system_prompt
         self.question = question
         self.history = history
@@ -28,7 +28,7 @@ class Assistant:
     def __call__(self, *args):
         return self.ask(*args)
 
-    def ask(self, question: str, history: List[str], mistral_model: str, system_prompt: str, temperature: float, prefix: str):
+    def ask(self, question: str, history: List[str], mistral_model: str, system_prompt: str, temperature: float, prefix: None|str = None):
         chat_body = ChatBody(system_prompt, question, history, prefix)
         chat_response = self.client.chat.complete(
             model=mistral_model,
@@ -37,6 +37,6 @@ class Assistant:
         )
 
         if chat_response and chat_response.choices:
-            return chat_response.choices[0].message.content
+            return chat_response.choices[0].message.content[len(prefix) if prefix else 0:]
         else:
             raise Exception(f'Bad chat response {chat_response}')
