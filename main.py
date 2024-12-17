@@ -3,7 +3,7 @@ import os
 import gradio as gr
 from mistralai import Mistral
 
-from ai import Assistant
+from assistant import Assistant
 
 client = Mistral(api_key=os.environ['MISTRAL_API_KEY'])
 assistant = Assistant(client)
