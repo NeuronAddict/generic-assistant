@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from typing import List
 
 from mistralai import Mistral
@@ -22,13 +23,20 @@ class ChatBody:
 
 class Assistant:
 
-    def __init__(self, client: Mistral):
-        self.client = client
-
     def __call__(self, *args):
         return self.ask(*args)
 
-    def ask(self, question: str, history: List[str], mistral_model: str, system_prompt: str, temperature: float, prefix: None|str = None):
+    @abstractmethod
+    def ask(self, question: str, history: List[str], mistral_model: str, system_prompt: str, temperature: float, prefix: None|str = None) -> str:
+        pass
+
+
+class BaseAssistant(Assistant):
+
+    def __init__(self, client: Mistral):
+        self.client = client
+
+    def ask(self, question: str, history: List[str], mistral_model: str, system_prompt: str, temperature: float, prefix: None|str = None) -> str:
         chat_body = ChatBody(system_prompt, question, history, prefix)
         chat_response = self.client.chat.complete(
             model=mistral_model,
@@ -40,3 +48,5 @@ class Assistant:
             return chat_response.choices[0].message.content[len(prefix) if prefix else 0:]
         else:
             raise Exception(f'Bad chat response {chat_response}')
+
+
