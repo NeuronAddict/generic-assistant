@@ -1,12 +1,13 @@
 import os
+from pathlib import Path
 
 import gradio as gr
 from mistralai import Mistral
 
-from assistant import BaseAssistant, LogAssistant
+from assistant import BaseAssistant, LogAssistant, DataFrameLogAssistant
 
 client = Mistral(api_key=os.environ['MISTRAL_API_KEY'])
-assistant = LogAssistant(BaseAssistant(client))
+assistant = DataFrameLogAssistant(LogAssistant(BaseAssistant(client)), Path('log.csv'))
 
 
 if __name__ == '__main__':

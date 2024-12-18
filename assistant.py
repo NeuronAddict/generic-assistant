@@ -1,6 +1,8 @@
 from abc import abstractmethod
+from pathlib import Path
 from typing import List
 
+import pandas as pd
 from mistralai import Mistral
 
 
@@ -45,7 +47,11 @@ class BaseAssistant(Assistant):
         )
 
         if chat_response and chat_response.choices:
-            return chat_response.choices[0].message.content[len(prefix) if prefix else 0:]
+            content = chat_response.choices[0].message.content
+            if isinstance(content, str):
+                return content[len(prefix) if prefix else 0:]
+            else:
+                raise Exception('stream not supported')
         else:
             raise Exception(f'Bad chat response {chat_response}')
 
@@ -73,3 +79,20 @@ class LogAssistant(Assistant):
         {prefix} {answer} 
         ###
         """)
+
+class DataFrameLogAssistant(Assistant):
+
+    def __init__(self, assistant: Assistant, log_filename: Path):
+        self.assistant = assistant
+        self.log_filename = log_filename
+        self.frame = pd.DataFrame()
+
+    def ask(self, question: str, history: List[str], mistral_model: str, system_prompt: str, temperature: float, prefix: None|str = None) -> str:
+        answer = self.assistant.ask(question, history, mistral_model, system_prompt, temperature, prefix)
+        self.__log(question, history, mistral_model, system_prompt, temperature, prefix, answer)
+        return answer
+
+    def __log(self, question, history, mistral_model, system_prompt, temperature, prefix, answer):
+        to_add = pd.DataFrame({'question': [question], 'mistral_model': [mistral_model], 'system_prompt': [system_prompt], 'temperature': [temperature], 'prefix': [prefix], 'answer': [answer]})
+        self.frame = pd.concat([self.frame, to_add], ignore_index=True)
+        self.frame.to_csv(self.log_filename)

@@ -91,7 +91,9 @@ packaging==24.2
     #   gradio-client
     #   huggingface-hub
 pandas==2.2.3
-    # via gradio
+    # via
+    #   -r requirements.in
+    #   gradio
 pillow==11.0.0
     # via gradio
 pydantic==2.10.3
