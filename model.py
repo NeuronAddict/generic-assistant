@@ -1,10 +1,33 @@
 from abc import abstractmethod
+from enum import Enum
 from pathlib import Path
 from typing import List
 
 import pandas as pd
 from mistralai import Mistral
 
+
+class Role(Enum):
+    SYSTEM = "system"
+    ASSISTANT = "assistant"
+    USER = "user"
+
+class AIMessage:
+
+    def __init__(self, role: Role, content: str, prefix: str | None = None):
+        self.role = role
+        self.content = content
+        if prefix is not None and role != Role.ASSISTANT:
+            raise ValueError("Role must be ASSISTANT for use a prefix")
+        self.prefix = prefix
+
+class History:
+
+    def __init__(self):
+        self.history: List[AIMessage] = []
+
+    def add(self, role: Role, content: str, prefix: str | None = None):
+        self.history.append(AIMessage(role, content, prefix))
 
 class ChatBody:
 
@@ -23,7 +46,9 @@ class ChatBody:
         return body
 
 
-class Assistant:
+
+
+class Model:
 
     def __call__(self, *args):
         return self.ask(*args)
@@ -33,7 +58,7 @@ class Assistant:
         pass
 
 
-class BaseAssistant(Assistant):
+class BaseModel(Model):
 
     def __init__(self, client: Mistral):
         self.client = client
@@ -56,9 +81,9 @@ class BaseAssistant(Assistant):
             raise Exception(f'Bad chat response {chat_response}')
 
 
-class LogAssistant(Assistant):
+class LogModel(Model):
 
-    def __init__(self, assistant: Assistant):
+    def __init__(self, assistant: Model):
         self.assistant = assistant
 
     def ask(self, question: str, history: List[str], mistral_model: str, system_prompt: str, temperature: float, prefix: None|str = None) -> str:
@@ -80,9 +105,9 @@ class LogAssistant(Assistant):
         ###
         """)
 
-class DataFrameLogAssistant(Assistant):
+class DataFrameLogModel(Model):
 
-    def __init__(self, assistant: Assistant, log_filename: Path):
+    def __init__(self, assistant: Model, log_filename: Path):
         self.assistant = assistant
         self.log_filename = log_filename
         self.frame = pd.DataFrame()
