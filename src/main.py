@@ -1,4 +1,5 @@
 import argparse
+import os
 from typing import List
 from dotenv import dotenv_values
 import gradio as gr
@@ -13,7 +14,7 @@ args = parser.parse_args()
 
 config = dotenv_values(args.env_file, verbose=True)
 
-factory: ModelFactory = MistralFactory()
+factory: ModelFactory = MistralFactory(os.environ['MISTRAL_API_KEY'])
 assistant: Assistant = Assistant(factory)
 
 ai_session: AISession | None = None

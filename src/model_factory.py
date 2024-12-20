@@ -1,4 +1,3 @@
-import os
 from abc import ABC, abstractmethod
 
 from mistralai import Mistral
@@ -14,8 +13,8 @@ class ModelFactory(ABC):
 
 class MistralFactory(ModelFactory):
 
-    def __init__(self):
-        self.client = Mistral(api_key=os.environ['MISTRAL_API_KEY'])
+    def __init__(self, api_key):
+        self.client = Mistral(api_key=api_key)
 
     def get_chat_model(self, model_name: str) -> ChatModel:
         return BaseChatModel(self.client, model_name)
