@@ -9,7 +9,7 @@ from assistant import Assistant
 from model_factory import ModelFactory, MistralFactory
 
 parser = argparse.ArgumentParser('ChatBot Interface')
-parser.add_argument('env_file', help='Env file to use.', default='.env')
+parser.add_argument('--env_file', help='Env file to use.', default='.env')
 args = parser.parse_args()
 
 config = dotenv_values(args.env_file, verbose=True)
