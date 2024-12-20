@@ -1,0 +1,13 @@
+services:
+  assistant:
+    build:
+      context: .
+    volumes:
+      - .env.example:/app/.env.example
+    ports:
+      - '127.0.0.1:7860:7860'
+    environment:
+      MISTRAL_API_KEY: ${MISTRAL_API_KEY}
+    command:
+      - --env_file
+      - .env.example
