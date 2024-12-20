@@ -40,5 +40,8 @@ class History:
     def add(self, chat_entry: ChatEntry):
         self.history.append(chat_entry)
 
-    def json(self):
-        return list(map(lambda entry: entry.__dict__, self.history))
+    def json(self, prefix: str | None = None):
+        l = list(map(lambda entry: entry.__dict__, self.history))
+        if prefix is not None:
+            l += [AssistantChatEntry(prefix, prefix=True).__dict__]
+        return l

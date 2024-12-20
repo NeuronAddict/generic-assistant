@@ -1,14 +1,21 @@
 import os
-from pathlib import Path
+from typing import List
 
 import gradio as gr
 from mistralai import Mistral
 
-from assistant import BaseAssistant, LogAssistant, DataFrameLogAssistant
+from ai_session import LogAISession, BaseAISession, AISession
+from model import BaseModel
 
 client = Mistral(api_key=os.environ['MISTRAL_API_KEY'])
-assistant = DataFrameLogAssistant(LogAssistant(BaseAssistant(client)), Path('log.csv'))
 
+ai_session: AISession | None = None
+
+def chat(question: str, _: List[str], model: str, system_prompt: str, temperature: float, prefix: str) -> str:
+    global ai_session
+    if ai_session is None:
+        ai_session = LogAISession(BaseAISession( BaseModel(client, model), system_prompt, temperature, prefix))
+    return ai_session.ask(question)
 
 if __name__ == '__main__':
 
@@ -17,7 +24,7 @@ if __name__ == '__main__':
         with gr.Column():
 
             with gr.Row():
-                model_choose = gr.Dropdown(['mistral-large-latest', 'mistral-small-latest', 'ministral-8b-latest', 'ministral-3b-latest'],
+                model_choose = gr.Dropdown(['mistral-small-latest', 'mistral-large-latest', 'ministral-8b-latest', 'ministral-3b-latest'],
                                        type='value', )
                 temp_slider = gr.Slider(0, 1, value=0.2, label="Temperature",
                                     info="Choose temperature https://docs.mistral.ai/api/#tag/chat/operation/chat_completion_v1_chat_completions_post")
@@ -29,7 +36,7 @@ if __name__ == '__main__':
                     prefix = gr.Textbox(label="Prefix", lines=3, value='Réponse en français de l\'assistant, avec des sources fiables :')
 
                 gr.ChatInterface(
-                    assistant, additional_inputs=[model_choose, system_prompt, temp_slider, prefix], type="messages",
+                    chat, additional_inputs=[model_choose, system_prompt, temp_slider, prefix], type="messages",
                     description="Posez votre question, attention à ne rien dire de confidentiel",
                     theme="default",
                     chatbot=gr.Chatbot(height='40vh', render=False, type='messages'),
