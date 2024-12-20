@@ -1,3 +1,4 @@
+import json
 from enum import Enum
 from typing import List, Dict, Any
 
@@ -10,12 +11,18 @@ class Role(str, Enum):
     def __repr__(self):
         return self.value
 
+
 class ChatEntry:
 
     def __init__(self, role: Role, content: str, name: str | None = None ):
         self.role = role
         self.content = content
         self.name = name
+
+    def json(self):
+        d = self.__dict__
+        d["role"] = self.role.value
+        return d
 
 class AssistantChatEntry(ChatEntry):
 
@@ -40,8 +47,8 @@ class History:
     def add(self, chat_entry: ChatEntry):
         self.history.append(chat_entry)
 
-    def json(self, prefix: str | None = None):
-        l = list(map(lambda entry: entry.__dict__, self.history))
+    def json(self, prefix: str | None = None) -> List[Dict[str, Any]]:
+        l = list(map(lambda entry: entry.json(), self.history))
         if prefix is not None:
-            l += [AssistantChatEntry(prefix, prefix=True).__dict__]
+            l += [AssistantChatEntry(prefix, prefix=True).json()]
         return l

@@ -111,6 +111,8 @@ python-dateutil==2.9.0.post0
     # via
     #   mistralai
     #   pandas
+python-dotenv==1.0.1
+    # via -r requirements.in
 python-multipart==0.0.19
     # via gradio
 pytz==2024.2

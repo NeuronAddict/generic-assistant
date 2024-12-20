@@ -29,6 +29,10 @@ WORKDIR /app
 
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+ENV HF_DATASETS_OFFLINE=1
+ENV HF_HUB_OFFLINE=1
+ENV HF_HOME="/tmp/hf-home"
+ENV GRADIO_SERVER_NAME=0.0.0.0
 
 COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
 
@@ -45,3 +49,5 @@ RUN chown -R root:root /app \
 #    && apt-get clean
 
 USER 1001
+
+ENTRYPOINT ["python", "/app/main.py"]
