@@ -31,7 +31,7 @@ def clear(model: str, system_prompt: str, temperature: float, prefix: str):
 
 
 if __name__ == '__main__':
-    with gr.Blocks(theme='gradio/monochrome') as demo:
+    with gr.Blocks() as demo:
 
         with gr.Column():
 
