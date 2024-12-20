@@ -1,24 +1,28 @@
-import os
 from typing import List
 
 import gradio as gr
-from mistralai import Mistral
 
-from ai_session import LogAISession, BaseAISession, AISession
-from model import BaseModel
+from ai_session import AISession
+from assistant import Assistant
+from model_factory import ModelFactory, MistralFactory
 
-client = Mistral(api_key=os.environ['MISTRAL_API_KEY'])
+factory: ModelFactory = MistralFactory()
+assistant: Assistant = Assistant(factory)
 
 ai_session: AISession | None = None
 
 def chat(question: str, _: List[str], model: str, system_prompt: str, temperature: float, prefix: str) -> str:
     global ai_session
     if ai_session is None:
-        ai_session = LogAISession(BaseAISession(BaseModel(client, model), system_prompt, temperature, prefix))
+        ai_session = assistant.new_session(model, system_prompt, temperature, prefix)
     return ai_session.ask(question)
 
-if __name__ == '__main__':
+def clear(model: str, system_prompt: str, temperature: float, prefix: str):
+    global ai_session
+    ai_session = assistant.new_session(model, system_prompt, temperature, prefix)
 
+
+if __name__ == '__main__':
     with gr.Blocks(theme='gradio/monochrome') as demo:
 
         with gr.Column():
@@ -36,13 +40,17 @@ if __name__ == '__main__':
 
             with gr.Column(scale=4, variant='panel'):
 
+                chatbot=gr.Chatbot(height='40vh', render=False, type='messages')
+                chatbot.clear(clear, [model_choose, system_prompt, temp_slider, prefix])
                 gr.ChatInterface(
-                    chat, additional_inputs=[model_choose, system_prompt, temp_slider, prefix], type="messages",
+                    chat, type="messages",
                     description="Posez votre question, attention à ne rien dire de confidentiel",
+                    additional_inputs=[model_choose, system_prompt, temp_slider, prefix],
+                    chatbot=chatbot,
                     theme="default",
-                    chatbot=gr.Chatbot(height='40vh', render=False, type='messages'),
                     cache_examples=False,
                     fill_height=True
                 )
+
 
     demo.launch()
