@@ -1,3 +1,8 @@
+# generic assistant
+
+Use it to run an AI app.
+
+
 # Template for python container for AI
 
 This repo extend https://github.com/NeuronAddict/python-template (python template).
