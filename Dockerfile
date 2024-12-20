@@ -32,7 +32,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
 
-COPY . .
+COPY src .
 
 RUN chown -R root:root /app \
     && find /app -type d -exec chmod 0755 '{}' \; \
