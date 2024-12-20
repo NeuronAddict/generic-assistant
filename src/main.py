@@ -1,10 +1,17 @@
+import argparse
 from typing import List
-
+from dotenv import dotenv_values
 import gradio as gr
 
 from ai_session import AISession
 from assistant import Assistant
 from model_factory import ModelFactory, MistralFactory
+
+parser = argparse.ArgumentParser('ChatBot Interface')
+parser.add_argument('env_file', help='Env file to use.', default='.env')
+args = parser.parse_args()
+
+config = dotenv_values(args.env_file, verbose=True)
 
 factory: ModelFactory = MistralFactory()
 assistant: Assistant = Assistant(factory)
@@ -28,15 +35,17 @@ if __name__ == '__main__':
         with gr.Column():
 
             with gr.Row():
+
                 model_choose = gr.Dropdown(['mistral-small-latest', 'mistral-large-latest', 'ministral-8b-latest', 'ministral-3b-latest'],
-                                       type='value', )
+                                       type='value', label="Choisissez un modèle")
+
                 temp_slider = gr.Slider(0, 1, value=0.2, label="Temperature",
                                     info="Choose temperature https://docs.mistral.ai/api/#tag/chat/operation/chat_completion_v1_chat_completions_post")
 
                 system_prompt = gr.Textbox(label="System prompt", lines=3,
-                                       value='Vous êtes un assistant utile et courtois. Vous répondez avec des références à des sources fiables. Vous répondez en francais.')
+                                       value=config['SYSTEM_PROMPT'])
                 prefix = gr.Textbox(label="Prefix", lines=3,
-                                value='Réponse en français de l\'assistant, avec des sources fiables :')
+                                value=config['PREFIX'])
 
             with gr.Column(scale=4, variant='panel'):
 
@@ -44,7 +53,7 @@ if __name__ == '__main__':
                 chatbot.clear(clear, [model_choose, system_prompt, temp_slider, prefix])
                 gr.ChatInterface(
                     chat, type="messages",
-                    description="Posez votre question, attention à ne rien dire de confidentiel",
+                    description=config['DESCRIPTION'],
                     additional_inputs=[model_choose, system_prompt, temp_slider, prefix],
                     chatbot=chatbot,
                     theme="default",
