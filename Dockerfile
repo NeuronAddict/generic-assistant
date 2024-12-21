@@ -35,19 +35,15 @@ ENV HF_HOME="/tmp/hf-home"
 ENV GRADIO_SERVER_NAME=0.0.0.0
 ENV PYTHONUNBUFFERED=1
 
-COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
-
-COPY src .
-
-RUN chown -R root:root /app \
-    && find /app -type d -exec chmod 0755 '{}' \; \
-    && find /app -type f -exec chmod 0644 '{}' \;
-
 # Install missing packages. Example for postgres
 # RUN apt update \
 #    && apt install -y libpq5 --no-install-recommends \
 #    && rm -fr /var/lib/apt/lists/* \
 #    && apt-get clean
+
+COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
+
+COPY  src .
 
 USER 1001
 
