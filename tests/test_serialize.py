@@ -1,4 +1,4 @@
-from chat_entry import History, ChatEntry, Role
+from ai.chat_entry import History, ChatEntry, Role
 
 
 def test_serialize():

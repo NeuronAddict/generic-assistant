@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from mistralai import Mistral
 
-from chatmodel import ChatModel, BaseChatModel
+from .chatmodel import ChatModel, BaseChatModel
 
 
 class ModelFactory(ABC):

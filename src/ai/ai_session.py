@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from chat_entry import History
-from chatmodel import ChatModel
+from .chat_entry import History
+from .chatmodel import ChatModel
 
 
 class AISession(ABC):

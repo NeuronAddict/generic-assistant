@@ -4,9 +4,9 @@ from typing import List
 from dotenv import dotenv_values
 import gradio as gr
 
-from ai_session import AISession
-from assistant import Assistant
-from model_factory import ModelFactory, MistralFactory
+from ai.ai_session import AISession
+from ai.assistant import Assistant
+from ai.model_factory import ModelFactory, MistralFactory
 
 parser = argparse.ArgumentParser('ChatBot Interface')
 parser.add_argument('--env-file', help='Env file to use.', default='.env')

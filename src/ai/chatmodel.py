@@ -2,7 +2,7 @@ from abc import abstractmethod
 
 from mistralai import Mistral
 
-from chat_entry import ChatEntry, AssistantChatEntry, History, Role
+from .chat_entry import ChatEntry, AssistantChatEntry, History, Role
 
 
 class ChatModel:

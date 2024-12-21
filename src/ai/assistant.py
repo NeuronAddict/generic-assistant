@@ -1,6 +1,6 @@
-from ai_session import AISession, BaseAISession, LogAISession
-from chatmodel import ChatModel
-from model_factory import ModelFactory
+from .ai_session import AISession, BaseAISession, LogAISession
+from .chatmodel import ChatModel
+from .model_factory import ModelFactory
 
 
 class Assistant:
