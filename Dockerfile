@@ -22,7 +22,7 @@ RUN pip install --upgrade pip \
     && pip install -r requirements.txt
 
 
-FROM docker.io/library/python:3.12-slim as base
+FROM docker.io/library/python:3.12-slim AS base
 
 RUN mkdir /app
 WORKDIR /app
