@@ -20,7 +20,7 @@ class ChatEntry:
         self.name = name
 
     def json(self):
-        d = self.__dict__
+        d = self.__dict__.copy()
         d["role"] = self.role.value
         return d
 
