@@ -1,0 +1,20 @@
+[project]
+name = "generic-assistant"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "gradio>=5",
+    "mistralai>=1.7.0",
+    "python-dotenv>=1.1.0",
+]
+
+[dependency-groups]
+dev = [
+    "nb-clean>=4.0.1",
+    "notebook>=7.4.2",
+    "pre-commit>=4.2.0",
+    "pyright>=1.1.397",
+    "pytest>=8.3.5",
+]
