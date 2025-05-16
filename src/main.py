@@ -23,4 +23,6 @@ if __name__ == '__main__':
     else:
         ui_factory = SpecificUIFactory()
 
-    ui_factory.get_ui(config, assistant).launch()
+    print(f"Start Server {config["IP"]}:{config["PORT"]}...")
+
+    ui_factory.get_ui(config, assistant).launch(config["IP"], int(config["PORT"]))

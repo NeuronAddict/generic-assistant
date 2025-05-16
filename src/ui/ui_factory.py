@@ -6,7 +6,7 @@ from ai.assistant import Assistant
 class UI(ABC):
 
     @abstractmethod
-    def launch(self):
+    def launch(self, ip: str, port: int):
         pass
 
 

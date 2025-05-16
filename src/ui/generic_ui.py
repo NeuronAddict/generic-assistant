@@ -9,8 +9,8 @@ from .ui_factory import UI
 
 class GenericUI(UI):
 
-    def launch(self):
-        self.blocks.launch()
+    def launch(self, ip: str, port: int):
+        self.blocks.launch(server_name=ip, server_port=port)
 
     def chat(self, question: str, _: List[str], model: str, system_prompt: str, temperature: float, prefix: str) -> str:
         if self.ai_session is None:
